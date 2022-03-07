@@ -13,7 +13,7 @@
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th scope="col">Mã sản phẩm</th>
+            <th scope="col">#</th>
             <th scope="col">Tên sản phẩm</th>
             <th scope="col">Giá sản phẩm</th>
             <th scope="col">Mô tả sản phẩm</th>
@@ -21,9 +21,9 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="product" items="${products}">
+        <c:forEach var="product" varStatus="loop" items="${products}">
             <tr>
-                <td>${product.id}</td>
+                <td>${loop.count}</td>
                 <td><a href="/products?action=view&id=${product.id}">${product.name}</a></td>
                 <td>${product.price}</td>
                 <td>${product.description}</td>

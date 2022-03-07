@@ -70,11 +70,28 @@ public class ProductDao implements IProductDao {
 
     @Override
     public boolean updateById(int id, Product product) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE product SET name = ?, price = ?, description = ? where  id = ?");
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setDouble(2, product.getPrice());
+            preparedStatement.setString(3, product.getDescription());
+            preparedStatement.setInt(4, id);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean deleteById(int id) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE from product where  id = ?");
+            preparedStatement.setInt(1, id);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 }

@@ -29,11 +29,11 @@ public class ProductService implements IProductService {
 
     @Override
     public boolean updateById(int id, Product product) {
-        return false;
+        return productDao.updateById(id, product);
     }
 
     @Override
     public boolean deleteById(int id) {
-        return false;
+        return productDao.deleteById(id);
     }
 }

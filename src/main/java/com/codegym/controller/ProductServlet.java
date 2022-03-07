@@ -33,6 +33,14 @@ public class ProductServlet extends HttpServlet {
                 showCreateForm(request, response);
                 break;
             }
+            case "edit": {
+                showEditForm(request, response);
+                break;
+            }
+            case "delete": {
+                showDeleteForm(request, response);
+                break;
+            }
             case "view": {
                 showProductDetail(request, response);
                 break;
@@ -42,6 +50,22 @@ public class ProductServlet extends HttpServlet {
                 break;
             }
         }
+    }
+
+    private void showDeleteForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Product product = productService.findById(id);
+        request.setAttribute("product", product);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/product/delete.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Product product = productService.findById(id);
+        request.setAttribute("product", product);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/product/edit.jsp");
+        dispatcher.forward(request, response);
     }
 
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -75,7 +99,35 @@ public class ProductServlet extends HttpServlet {
                 createProduct(request, response);
                 break;
             }
+            case "edit": {
+                editProduct(request, response);
+                break;
+            }
+            case "delete": {
+                int id = Integer.parseInt(request.getParameter("id"));
+                productService.deleteById(id);
+                response.sendRedirect("/products");
+                break;
+            }
         }
+    }
+
+    private void editProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String name = request.getParameter("name");
+        double price = Double.parseDouble(request.getParameter("price"));
+        String description = request.getParameter("description");
+        Product product = new Product(name, price, description);
+        boolean isUpdated = productService.updateById(id, product);
+        String message = "";
+        if (isUpdated) {
+            message = "Cập nhật thành công!";
+        } else {
+            message = "Xảy ra lỗi!";
+        }
+        request.setAttribute("message", message);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/product/edit.jsp");
+        dispatcher.forward(request, response);
     }
 
     private void createProduct(HttpServletRequest request, HttpServletResponse response) throws IOException {
