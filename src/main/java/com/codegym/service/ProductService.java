@@ -36,4 +36,15 @@ public class ProductService implements IProductService {
     public boolean deleteById(int id) {
         return productDao.deleteById(id);
     }
+
+    @Override
+    public boolean insertProductUsingProcedure(Product product) {
+        return productDao.insertProductUsingProcedure(product);
+    }
+
+    @Override
+    public List<Product> findAllProductByName(String name) {
+        name = "%" + name + "%";
+        return productDao.findAllProductByName(name);
+    }
 }

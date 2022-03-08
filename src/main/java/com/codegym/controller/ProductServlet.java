@@ -83,6 +83,10 @@ public class ProductServlet extends HttpServlet {
 
     private void showListProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Product> products = productService.findAll();
+        String q = request.getParameter("q");
+        if (q != null){
+            products = productService.findAllProductByName(q);
+        }
         request.setAttribute("products", products);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/product/list.jsp");
         dispatcher.forward(request, response);
@@ -135,7 +139,7 @@ public class ProductServlet extends HttpServlet {
         double price = Double.parseDouble(request.getParameter("price"));
         String description = request.getParameter("description");
         Product product = new Product(name, price, description);
-        productService.create(product);
+        productService.insertProductUsingProcedure(product);
         response.sendRedirect("/products");
     }
 }
