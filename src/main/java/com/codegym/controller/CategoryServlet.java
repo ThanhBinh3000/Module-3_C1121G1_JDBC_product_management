@@ -1,9 +1,13 @@
 package com.codegym.controller;
 
 import com.codegym.dao.category.CategoryDao;
+import com.codegym.dao.product.ProductDao;
 import com.codegym.model.Category;
+import com.codegym.model.Product;
 import com.codegym.service.category.CategoryService;
 import com.codegym.service.category.ICategoryService;
+import com.codegym.service.product.IProductService;
+import com.codegym.service.product.ProductService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,9 +21,11 @@ import java.util.List;
 @WebServlet(name = "CategoryServlet", value = "/categories")
 public class CategoryServlet extends HttpServlet {
     private ICategoryService categoryService;
+    private IProductService productService;
 
     public CategoryServlet() {
         this.categoryService = new CategoryService(new CategoryDao());
+        this.productService = new ProductService(new ProductDao());
     }
 
     @Override
@@ -29,11 +35,23 @@ public class CategoryServlet extends HttpServlet {
             action = "";
         }
         switch (action) {
+            case "view": {
+                showListProductByCategoryId(request, response);
+                break;
+            }
             default: {
                 showListCategory(request, response);
                 break;
             }
         }
+    }
+
+    private void showListProductByCategoryId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int categoryId = Integer.parseInt(request.getParameter("id"));
+        List<Product> products = productService.findAllProductByCategoryId(categoryId);
+        request.setAttribute("products", products);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/category/view.jsp");
+        dispatcher.forward(request, response);
     }
 
     private void showListCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

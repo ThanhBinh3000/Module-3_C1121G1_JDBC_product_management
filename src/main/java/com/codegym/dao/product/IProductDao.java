@@ -9,4 +9,6 @@ public interface IProductDao extends IGeneralDao<Product> {
     boolean insertProductUsingProcedure(Product product);
 
     List<Product> findAllProductByName(String name);
+
+    List<Product> findAllProductByCategoryId(int categoryId);
 }

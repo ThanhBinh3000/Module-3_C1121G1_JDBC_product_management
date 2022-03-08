@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface IProductService extends IGeneralService<Product> {
     boolean insertProductUsingProcedure(Product product);
+
     List<Product> findAllProductByName(String name);
+
+    List<Product> findAllProductByCategoryId(int categoryId);
 }

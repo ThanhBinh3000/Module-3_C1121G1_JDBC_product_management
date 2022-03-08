@@ -15,6 +15,7 @@ public class ProductDao implements IProductDao {
     public static final String SQL_SELECT_ALL_PRODUCT = "SELECT * FROM product";
     public static final String SQL_CALL_PROCEDURE_INSERT = "call insert_product(?, ?, ?)";
     public static final String SQL_SELECT_PRODUCT_BY_NAME = "SELECT * from product where name like ?";
+    public static final String SQL_SELECT_ALL_PRODUCT_BY_CATEGORY = "SELECT * FROM product where category_id = ?";
     private Connection connection = DBConnection.getConnection();
 
     public ProductDao() {
@@ -133,6 +134,28 @@ public class ProductDao implements IProductDao {
                 double price = rs.getDouble("price");
                 String description = rs.getString("description");
                 int categoryId = rs.getInt("category_id");
+                Product product = new Product(id, nameFromSQL, price, description);
+                product.setCategoryId(categoryId);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> findAllProductByCategoryId(int categoryId) {
+        List<Product> products = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_PRODUCT_BY_CATEGORY);
+            preparedStatement.setInt(1, categoryId);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nameFromSQL = rs.getString("name");
+                double price = rs.getDouble("price");
+                String description = rs.getString("description");
                 Product product = new Product(id, nameFromSQL, price, description);
                 product.setCategoryId(categoryId);
                 products.add(product);
