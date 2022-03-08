@@ -35,6 +35,10 @@ public class CategoryServlet extends HttpServlet {
             action = "";
         }
         switch (action) {
+            case "delete": {
+                showDeleteForm(request, response);
+                break;
+            }
             case "view": {
                 showListProductByCategoryId(request, response);
                 break;
@@ -44,6 +48,14 @@ public class CategoryServlet extends HttpServlet {
                 break;
             }
         }
+    }
+
+    private void showDeleteForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Category category = categoryService.findById(id);
+        request.setAttribute("category", category);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/category/delete.jsp");
+        dispatcher.forward(request, response);
     }
 
     private void showListProductByCategoryId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,5 +75,21 @@ public class CategoryServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String action = request.getParameter("action");
+        if (action == null) {
+            action = "";
+        }
+        switch (action) {
+            case "delete": {
+                deleteCategory(request, response);
+                break;
+            }
+        }
+    }
+
+    private void deleteCategory(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        categoryService.deleteById(id);
+        response.sendRedirect("/categories");
     }
 }

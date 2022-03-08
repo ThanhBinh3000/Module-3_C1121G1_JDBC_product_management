@@ -5,7 +5,7 @@ import com.codegym.model.Category;
 
 import java.util.List;
 
-public class CategoryService implements ICategoryService{
+public class CategoryService implements ICategoryService {
     private ICategoryDao categoryDao;
 
     public CategoryService(ICategoryDao categoryDao) {
@@ -19,7 +19,7 @@ public class CategoryService implements ICategoryService{
 
     @Override
     public Category findById(int id) {
-        return null;
+        return categoryDao.findById(id);
     }
 
     @Override
@@ -34,6 +34,6 @@ public class CategoryService implements ICategoryService{
 
     @Override
     public boolean deleteById(int id) {
-        return false;
+        return categoryDao.deleteCategoryUsingProcedure(id);
     }
 }
