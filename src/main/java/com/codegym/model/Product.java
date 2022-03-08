@@ -9,6 +9,8 @@ public class Product {
 
     private String description;
 
+    private int categoryId;
+
     public Product() {
     }
 
@@ -23,6 +25,14 @@ public class Product {
         this.name = name;
         this.price = price;
         this.description = description;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public int getId() {

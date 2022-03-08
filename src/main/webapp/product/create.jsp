@@ -33,6 +33,14 @@
             <label for="description" class="form-label">Mô tả sản phẩm:</label>
             <input type="text" class="form-control" id="description" name="description">
         </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">danh mục sản phẩm:</label>
+            <select class="form-control" id="category" name="categoryId">
+                <c:forEach var="category" items="${categories}">
+                    <option value="${category.id}">${category.name}</option>
+                </c:forEach>
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Tạo mới</button>
     </form>
 </div>

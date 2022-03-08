@@ -1,9 +1,13 @@
 package com.codegym.controller;
 
-import com.codegym.dao.ProductDao;
+import com.codegym.dao.category.CategoryDao;
+import com.codegym.dao.product.ProductDao;
+import com.codegym.model.Category;
 import com.codegym.model.Product;
-import com.codegym.service.IProductService;
-import com.codegym.service.ProductService;
+import com.codegym.service.category.CategoryService;
+import com.codegym.service.category.ICategoryService;
+import com.codegym.service.product.IProductService;
+import com.codegym.service.product.ProductService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,9 +21,11 @@ import java.util.List;
 @WebServlet(name = "ProductServlet", value = "/products")
 public class ProductServlet extends HttpServlet {
     private IProductService productService;
+    private ICategoryService categoryService;
 
     public ProductServlet() {
         this.productService = new ProductService(new ProductDao());
+        this.categoryService = new CategoryService(new CategoryDao());
     }
 
     @Override
@@ -69,6 +75,8 @@ public class ProductServlet extends HttpServlet {
     }
 
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Category> categories = categoryService.findAll();
+        request.setAttribute("categories", categories);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/product/create.jsp");
         dispatcher.forward(request, response);
     }
@@ -84,7 +92,7 @@ public class ProductServlet extends HttpServlet {
     private void showListProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Product> products = productService.findAll();
         String q = request.getParameter("q");
-        if (q != null){
+        if (q != null) {
             products = productService.findAllProductByName(q);
         }
         request.setAttribute("products", products);
@@ -138,8 +146,10 @@ public class ProductServlet extends HttpServlet {
         String name = request.getParameter("name");
         double price = Double.parseDouble(request.getParameter("price"));
         String description = request.getParameter("description");
+        int categoryId = Integer.parseInt(request.getParameter("categoryId"));
         Product product = new Product(name, price, description);
-        productService.insertProductUsingProcedure(product);
+        product.setCategoryId(categoryId);
+        productService.create(product);
         response.sendRedirect("/products");
     }
 }
